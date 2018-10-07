@@ -76,4 +76,23 @@ RSpec.describe 'Topic API', type: :request do
       expect(json['message']).to match(/Data has been updated successfully/)
     end
   end
+
+  describe 'DELETE /topics/:id' do
+    let!(:topics) { create_list(:topic, 10) }
+    let(:topic_id) { topics.first.id }
+
+    before { delete "/topics/#{topic_id}"}
+
+    it 'returns status code 200' do
+      expect(response).to have_http_status(200)
+    end
+
+    it 'returns error false message' do
+      expect(json['error']).to eql(false)
+    end
+
+    it 'returns success message' do
+      expect(json['message']).to match(/Data has been deleted successfully/)
+    end
+  end
 end
