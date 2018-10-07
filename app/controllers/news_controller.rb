@@ -29,6 +29,22 @@ class NewsController < ApplicationController
     end
   end
 
+  def destroy
+    begin
+      news = News.find(params[:id])
+
+      if news.destroy
+        render json: { error: false, message: 'Data has been deleted successfully' }, status: :ok
+      else
+        render json: { error: true, message: news.custom_full_messages }, status: 422
+      end
+    rescue ActiveRecord::RecordNotFound => e
+      render json: { error: true, message: e.message }, status: 422
+    rescue ActiveRecord::StatementInvalid => e
+      render json: { error: true, message: e.message }, status: 422
+    end
+  end
+
   private
 
   def news_params
