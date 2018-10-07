@@ -1,7 +1,7 @@
 class News < ApplicationRecord
   enum status: [:draft, :deleted, :publish]
 
-  # Validation
+  # Association
   has_many :news_topics
   has_many :topics, through: :news_topics
 end
