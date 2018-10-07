@@ -1,6 +1,10 @@
 class NewsController < ApplicationController
   def index
-    news = News.all
+    if params["status"].present?
+      news = News.where(status: params["status"])
+    else
+      news = News.all
+    end
 
     render 'index', locals: { error: false, news: news }, status: :ok
   end
