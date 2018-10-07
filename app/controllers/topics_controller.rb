@@ -15,6 +15,16 @@ class TopicsController < ApplicationController
     end
   end
 
+  def update
+    topic = Topic.find(params[:id])
+
+    if topic.save
+      render json: { error: false, message: 'Data has been updated successfully' }, status: :ok
+    else
+      render json: { error: true, message: topic.custom_full_messages }, status: 422
+    end
+  end
+
   private
 
   def topic_params
