@@ -13,8 +13,8 @@
 ActiveRecord::Schema.define(version: 2018_10_07_022631) do
 
   create_table "news", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "name"
-    t.integer "status"
+    t.string "name", null: false
+    t.integer "status", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["status"], name: "index_news_on_status"
@@ -30,7 +30,7 @@ ActiveRecord::Schema.define(version: 2018_10_07_022631) do
   end
 
   create_table "topics", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
