@@ -40,6 +40,8 @@ class TopicsController < ApplicationController
       end
     rescue ActiveRecord::RecordNotFound => e
       render json: { error: true, message: e.message }, status: 422
+    rescue ActiveRecord::StatementInvalid => e
+      render json: { error: true, message: e.message }, status: 422
     end
   end
 
