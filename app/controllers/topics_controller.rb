@@ -16,22 +16,30 @@ class TopicsController < ApplicationController
   end
 
   def update
-    topic = Topic.find(params[:id])
+    begin
+      topic = Topic.find(params[:id])
 
-    if topic.save
-      render json: { error: false, message: 'Data has been updated successfully' }, status: :ok
-    else
-      render json: { error: true, message: topic.custom_full_messages }, status: 422
+      if topic.update(topic_params)
+        render json: { error: false, message: 'Data has been updated successfully' }, status: :ok
+      else
+        render json: { error: true, message: topic.custom_full_messages }, status: 422
+      end
+    rescue ActiveRecord::RecordNotFound => e
+      render json: { error: true, message: e.message }, status: 422
     end
   end
 
   def destroy
-    topic = Topic.find(params[:id])
+    begin
+      topic = Topic.find(params[:id])
 
-    if topic.destroy
-      render json: { error: false, message: 'Data has been deleted successfully' }, status: :ok
-    else
-      render json: { error: true, message: topic.custom_full_messages }, status: 422
+      if topic.destroy
+        render json: { error: false, message: 'Data has been deleted successfully' }, status: :ok
+      else
+        render json: { error: true, message: topic.custom_full_messages }, status: 422
+      end
+    rescue ActiveRecord::RecordNotFound => e
+      render json: { error: true, message: e.message }, status: 422
     end
   end
 
