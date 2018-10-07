@@ -5,18 +5,38 @@ RSpec.describe 'News API', type: :request do
   describe 'GET /news' do
     let!(:news) { create_list(:news, 5) }
 
-    before { get '/news', headers: { 'Accept': 'application/json' } }
+    context 'when filter by news status' do
+      before { get '/news', params: { status: 2 }, headers: { 'Accept': 'application/json' } }
 
-    it 'returns status code 200' do
-      expect(response).to have_http_status(200)
+      let!(:custom_news) { create(:news, name: 'Pemilu') }
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      it 'returns error false message' do
+        expect(json['error']).to eql(false)
+      end
+
+      it 'returns data with respective params' do
+        expect(json['news'][0]["status"]).to eql("publish")
+      end
     end
 
-    it 'returns error false message' do
-      expect(json['error']).to eql(false)
-    end
+    context 'when do not filter' do
+      before { get '/news', headers: { 'Accept': 'application/json' } }
 
-    it 'returns data news' do
-      expect(json['news'].length).to eql(5)
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      it 'returns error false message' do
+        expect(json['error']).to eql(false)
+      end
+
+      it 'returns data news' do
+        expect(json['news'].length).to eql(5)
+      end
     end
   end
 
