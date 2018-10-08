@@ -1,43 +1,46 @@
 class TopicsController < ApplicationController
-  def index
-    topics = Topic.all
+  before_action :set_topic, only: [:update, :destroy]
 
-    render json: { error: false, topics: topics }, status: :ok
+  def index
+    topics = repo.all
+
+    render json: { error: false, topics: topics }, status: 200
   end
 
   def create
-    topic = Topic.new(topic_params)
+    topic_creation_service = TopicCreationService.new(params).call
 
-    if topic.save
-      render json: { error: false, message: 'Data has been created successfully' }, status: :created
-    else
-      render json: { error: true, message: topic.custom_full_messages }, status: 422
-    end
+    render json: {
+      error: topic_creation_service[:error],
+      message: topic_creation_service[:message]
+    }, status: topic_creation_service[:status]
   end
 
   def update
-    topic = Topic.find(params[:id])
+    topic_update_service = TopicUpdateService.new(@topic, params, repo).call
 
-    if topic.update(topic_params)
-      render json: { error: false, message: 'Data has been updated successfully' }, status: :ok
-    else
-      render json: { error: true, message: topic.custom_full_messages }, status: 422
-    end
+    render json: {
+      error: topic_update_service[:error],
+      message: topic_update_service[:message]
+    }, status: topic_update_service[:status]
   end
 
   def destroy
-    topic = Topic.find(params[:id])
+    topic_delete_service = TopicDeleteService.new(@topic, repo).call
 
-    if topic.destroy
-      render json: { error: false, message: 'Data has been deleted successfully' }, status: :ok
-    else
-      render json: { error: true, message: topic.custom_full_messages }, status: 422
-    end
+    render json: {
+      error: topic_delete_service[:error],
+      message: topic_delete_service[:message]
+    }, status: topic_delete_service[:status]
   end
 
   private
 
-  def topic_params
-    params.permit(:name)
+  def set_topic
+    @topic = Topic.find(params[:id])
+  end
+
+  def repo
+    @repo ||= TopicRepository.new
   end
 end
