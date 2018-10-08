@@ -6,9 +6,9 @@ RSpec.describe 'News API', type: :request do
     let!(:news) { create_list(:news, 5) }
 
     context 'when filter news by status' do
-      before { get '/news', params: { status: 2 }, headers: { 'Accept': 'application/json' } }
+      let!(:custom_news) { create(:news, status: "publish") }
 
-      let!(:custom_news) { create(:news, name: 'Pemilu') }
+      before { get '/news', params: { status: "publish" }, headers: { 'Accept': 'application/json' } }
 
       it 'returns status code 200' do
         expect(response).to have_http_status(200)

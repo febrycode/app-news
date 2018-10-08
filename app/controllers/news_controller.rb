@@ -1,14 +1,8 @@
 class NewsController < ApplicationController
   def index
-    if params["status"].present?
-      news = News.where(status: params["status"])
-    elsif params["topic"].present?
-      news = News.joins(:topics).where("topics.name = ?", params["topic"])
-    else
-      news = News.all
-    end
+    news_read_service = NewsReadService.new(params).call
 
-    render 'index', locals: { error: false, news: news }, status: :ok
+    render 'index', locals: { error: false, news: news_read_service }, status: :ok
   end
 
   def create
@@ -45,5 +39,9 @@ class NewsController < ApplicationController
 
   def news_params
     params.permit(:name, :status)
+  end
+
+  def repo
+    @repo ||= NewsRepository.new
   end
 end
