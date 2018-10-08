@@ -2,6 +2,8 @@ class NewsController < ApplicationController
   def index
     if params["status"].present?
       news = News.where(status: params["status"])
+    elsif params["topic"].present?
+      news = News.joins(:topics).where("topics.name = ?", params["topic"])
     else
       news = News.all
     end
