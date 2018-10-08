@@ -12,7 +12,10 @@
 
 ActiveRecord::Schema.define(version: 2018_10_07_022631) do
 
-  create_table "news", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "news", force: :cascade do |t|
     t.string "name", null: false
     t.integer "status", default: 0, null: false
     t.datetime "created_at", null: false
@@ -20,7 +23,7 @@ ActiveRecord::Schema.define(version: 2018_10_07_022631) do
     t.index ["status"], name: "index_news_on_status"
   end
 
-  create_table "news_topics", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "news_topics", force: :cascade do |t|
     t.bigint "news_id"
     t.bigint "topic_id"
     t.datetime "created_at", null: false
@@ -29,7 +32,7 @@ ActiveRecord::Schema.define(version: 2018_10_07_022631) do
     t.index ["topic_id"], name: "index_news_topics_on_topic_id"
   end
 
-  create_table "topics", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "topics", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
